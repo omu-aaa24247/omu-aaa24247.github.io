@@ -148,8 +148,26 @@
                     // GeoJSONレイヤに地図がフィットするように表示範囲を自動調整
                     map.fitBounds(selected_area.getBounds());
             });
+
+			fetch("./P20-12_27.geojson") 
+                .then((response) => response.json())
+                .then((data) => {
+                    var shelterData = data.features.filter(feature => feature.properties.P20_001 === '27142');
+                    
+                    const shelterMarkers = L.markerClusterGroup()
+                        .bindPopup((layer) => {
+                            return `<strong>${layer.feature.properties.P20_002}</strong><br>${layer.feature.properties.P20_004}`;
+                        })
+                        .addTo(map);
+
+                    var shelters = L.geoJSON(shelterData);
+                    shelters.addTo(shelterMarkers);
+
+                    LayerControl.addOverlay(shelterMarkers, "避難所");
+            });
         </script>
     </body>
 </html>
+
 
 
